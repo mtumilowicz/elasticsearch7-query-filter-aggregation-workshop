@@ -15,7 +15,7 @@ PUT /programming-user-groups
     }
 }
 
-POST /programming-user-groups/1
+POST /programming-user-groups/_create/1
 {
 "name": "Denver Clojure",
 "organizer": ["Daniel", "Lee"],
@@ -26,7 +26,7 @@ POST /programming-user-groups/1
 "location_group": "Denver, Colorado, USA"
 }
 
-POST /programming-user-groups/2
+POST /programming-user-groups/_create/2
 {
 "name": "Elasticsearch Denver",
 "organizer": "Lee",
@@ -37,7 +37,7 @@ POST /programming-user-groups/2
 "location_group": "Denver, Colorado, USA"
 }
 
-POST /programming-user-groups/3
+POST /programming-user-groups/_create/3
 {
 "name": "Elasticsearch San Francisco",
 "organizer": "Mik",
@@ -48,7 +48,7 @@ POST /programming-user-groups/3
 "location_group": "San Francisco, California, USA"
 }
 
-POST /programming-user-groups/4
+POST /programming-user-groups/_create/4
 {
 "name": "Boulder/Denver big data get-together",
 "organizer": "Andy",
@@ -59,7 +59,7 @@ POST /programming-user-groups/4
 "location_group": "Boulder, Colorado, USA"
 }
 
-POST /programming-user-groups/5
+POST /programming-user-groups/_create/5
 {
 "name": "Enterprise search London get-together",
 "organizer": "Tyler",
