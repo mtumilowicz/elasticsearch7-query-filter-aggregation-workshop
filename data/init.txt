@@ -1,16 +1,82 @@
 PUT /programming-user-groups
 {
+    "settings": {
+        "analysis": {
+            "analyzer": {
+                "english_standard": {
+                    "type": "standard",
+                    "stopwords": "_english_"
+                }
+            }
+        }
+    },
     "mappings": {
         "properties": {
             "name": { "type": "text"  },
             "organizer": { "type": "text"  },
-            "description": { "type": "text"  },
+            "description": {
+                "type": "text",
+                "analyzer": "english_standard"
+            },
             "created_on": {
                 "type":   "date",
                 "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd"},
             "tags":  { "type": "keyword"  },
             "members":   { "type": "text"  },
             "location_group":   { "type": "text"  }
+        }
+    }
+}
+
+POST programming-user-groups/_analyze
+{
+  "text": "The 2 QUICK Brown-Foxes jumped over the lazy dog's bone."
+}
+
+weryfikacja
+POST programming-user-groups/_analyze
+{
+  "analyzer": "english_standard",
+  "text": "The 2 QUICK Brown-Foxes jumped over the lazy dog's bone."
+}
+
+GET programming-user-groups/_settings
+
+searching
+
+POST /programming-user-groups/_search
+{
+    "query": {
+        "query_string" : {
+            "query" : "of"
+        }
+    }
+}
+
+analyze terms
+
+GET /programming-user-groups/_termvectors/1
+{
+  "fields" : ["description"],
+  "offsets" : true,
+  "payloads" : true,
+  "positions" : true,
+  "term_statistics" : true,
+  "field_statistics" : true
+}
+
+
+aggregations
+
+GET /programming-user-groups/_search?pretty
+{
+    "_source": ["name"],
+    "aggregations" : {
+        "top_tags" : {
+            "terms" : {
+                "field" : "tags"
+            }
+
         }
     }
 }
