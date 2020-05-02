@@ -69,166 +69,18 @@
     * verify terms for some field of selected document
 1. search
     * description contains clojure or group (ignore case); better score if contains all
-        ```
-        GET programming-user-groups/_search
-        {
-            "query": {
-                "match" : {
-                    "description": {
-                        "query" : "group clojure"
-                    }
-                }
-            }
-        }      
-        ```
     * contains clojure and group, the more the higher the score
-        ```
-        GET programming-user-groups/_search
-        {
-            "query": {
-                "query_string" : {
-                    "query" : "clojure AND group"
-                }
-            }
-        }
-        ```
     * description contains group clojure in that order in proximity - suppose at most 1 words between
         * compare with different slop and order
-        ```
-        GET programming-user-groups/_search
-        {
-            "query": {
-                "match_phrase" : {
-                    "description" : {
-                      "query": "group clojure",
-                      "slop": 1
-                    }
-                }
-            }
-        }
-        ```
     * find all created after 2011, first chunk: 10
         * manipulate from and size
-        ```
-        GET programming-user-groups/_search
-        {
-            "from" : 0, "size" : 2,
-            "query": {
-                "range" : {
-                    "created_on" : {
-                        "gte" : "2011-01-01"
-                    }
-                }
-            }
-        }
-        ```
     * find all organized by Lee (not lee)
         * compare with lee - draw conclusions
-        ```
-        GET programming-user-groups/_search
-        {
-            "query": {
-                "term": {
-                    "organizer": "lee"
-                }
-            }
-        }
-        ```
     * name has to contain elasticsearch and organizer cannot be Lee
         * compare with filter
-        ```
-        GET programming-user-groups/_search
-        {
-          "query": {
-            "bool" : {
-              "must" : {
-                "match" : { "name" : "elasticsearch" }
-              },
-              "must_not" : {
-                  "match": { "organizer" : "Lee" }
-              }
-            }
-          }
-        }
-        ```
     * event must contain group and organizer should be Lee
-        ```
-        GET programming-user-groups/_search
-        {
-            "query": {
-                "bool" : {
-                    "must" : {
-                        "query_string" : {
-                          "query": "group"
-                        }
-                    },
-                    "should": {
-                        "match": { "organizer" : "Lee" }
-                    }
-                }
-            }
-        }      
-        ```
     * filter events that has tag clojure or lucene
-        ```
-        GET programming-user-groups/_search
-        {
-            "query": {
-                "bool" : {
-                    "filter" : {
-                        "terms" : {
-                            "tags": ["clojure", "lucene"]
-                        }
-                    }
-                }
-            }
-        }
-        ```
 1. aggregations
     * group by tags and display count in each group
-        ```
-        POST /programming-user-groups/_search
-        {
-            "aggs": {
-                "by_tag" : { 
-                    "terms": { "field" : "tags" }
-                  }
-            }   
-        }
-        ```
     * group by tags and display date of the latest event in each group
-        ```
-        POST /programming-user-groups/_search
-        {
-            "aggs": {
-                "by_tag" : {
-                    "terms": { "field" : "tags" },
-                    "aggs":{
-                        "max_date_in_bucket": {
-                            "max": { "field": "created_on" }
-                        }
-                    }
-                }
-            }
-        }
-        ```
     * group by tags and display id and date of the latest event in each group
-        ```
-        POST /programming-user-groups/_search
-        {
-            "aggs": {
-                "by_tag": {
-                    "terms": { "field": "tags" },
-                    "aggs": {
-                        "latest_event_id": {
-                            "top_hits": {
-                                "_source": ["_id", "created_on"], 
-                                "size": 1,
-                                "sort": [ { "created_on": { "order": "desc" } } ]
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        ```
