@@ -107,8 +107,51 @@
             }
         }
         ```
-    * range
-    * term
-    * must, must_not
+    * find all created after 2011, first chunk: 10
+        * manipulate from and size
+        ```
+        GET programming-user-groups/_search
+        {
+            "from" : 0, "size" : 2,
+            "query": {
+                "range" : {
+                    "created_on" : {
+                        "gte" : "2011-01-01"
+                    }
+                }
+            }
+        }
+        ```
+    * find all organized by Lee (not lee)
+        * compare with lee - draw conclusions
+        ```
+        GET programming-user-groups/_search
+        {
+            "query": {
+                "term": {
+                    "organizer": {
+                        "value": "lee"
+                    }
+                }
+            }
+        }
+        ```
+    * name has to contain elasticsearch and organizer cannot be Lee
+        * compare with filter
+        ```
+        GET programming-user-groups/_search
+        {
+          "query": {
+            "bool" : {
+              "must" : {
+                "match" : { "name" : "elasticsearch" }
+              },
+              "must_not" : {
+                  "match": { "organizer" : "Lee" }
+              }
+            }
+          }
+        }
+        ```
     * should
     * filter
