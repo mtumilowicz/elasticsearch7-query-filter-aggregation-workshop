@@ -67,4 +67,48 @@
     * analyze exemplary query using default analyzer
     * verify that all documents were indexed
     * verify terms for some selected document
-    
+1. search
+    * description contains clojure or Clojure or group or Group; better score if contains all
+        ```
+        GET programming-user-groups/_search
+        {
+            "query": {
+                "match" : {
+                    "description": {
+                        "query" : "group clojure"
+                    }
+                }
+            }
+        }      
+        ```
+    * contains clojure and group, the more the higher the score
+        ```
+        GET programming-user-groups/_search
+        {
+            "query": {
+                "query_string" : {
+                    "query" : "clojure AND group"
+                }
+            }
+        }
+        ```
+    * description contains group clojure in that order in proximity - suppose at most 1 words between
+        * compare with different slop and order
+        ```
+        GET programming-user-groups/_search
+        {
+            "query": {
+                "match_phrase" : {
+                    "description" : {
+                      "query": "group clojure",
+                      "slop": 1
+                    }
+                }
+            }
+        }
+        ```
+    * range
+    * term
+    * must, must_not
+    * should
+    * filter
