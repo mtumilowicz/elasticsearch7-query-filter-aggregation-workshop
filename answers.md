@@ -1,5 +1,42 @@
-1. we want to index documents
+1. index
     ```
+    PUT /programming-user-groups
+    {
+        "settings": {
+            "index" : {
+                "number_of_shards" : 2, 
+                "number_of_replicas" : 2 
+            },
+            "analysis": {
+                "analyzer": {
+                    "english_standard": {
+                        "type": "standard",
+                        "stopwords": "_english_"
+                    }
+                }
+            }
+        },
+        "mappings": {
+            "properties": {
+                "name": { "type": "text"  },
+                "organizer": { "type": "text"  },
+                "description": {
+                    "type": "text",
+                    "analyzer": "english_standard"
+                },
+                "created_on": {
+                    "type":   "date",
+                    "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd"},
+                "tags":  { "type": "keyword"  },
+                "members":   { "type": "text"  },
+                "location_group":   { "type": "text"  }
+            }
+        }
+    }
+    ```
+1. indexing documents
+    ```
+    POST /programming-user-groups/_create/1
     {
         "name": "Denver Clojure",
         "organizer": ["Daniel", "Lee"],
@@ -9,8 +46,8 @@
         "members": ["Lee", "Daniel", "Mike"],
         "location_group": "Denver, Colorado, USA"
     }
-    ```
-    ```   
+    
+    POST /programming-user-groups/_create/2
     {
         "name": "Elasticsearch Denver",
         "organizer": "Lee",
@@ -20,8 +57,8 @@
         "members": ["Lee", "Mike"],
         "location_group": "Denver, Colorado, USA"
     }
-    ```
-    ```
+    
+    POST /programming-user-groups/_create/3
     {
         "name": "Elasticsearch San Francisco",
         "organizer": "Mik",
@@ -31,8 +68,8 @@
         "members": ["Lee", "Igor"],
         "location_group": "San Francisco, California, USA"
     }
-    ```
-    ```
+    
+    POST /programming-user-groups/_create/4
     {
         "name": "Boulder/Denver big data get-together",
         "organizer": "Andy",
@@ -42,8 +79,8 @@
         "members": ["Greg", "Bill"],
         "location_group": "Boulder, Colorado, USA"
     }
-    ```  
-    ```
+    
+    POST /programming-user-groups/_create/5
     {
         "name": "Enterprise search London get-together",
         "organizer": "Tyler",
@@ -52,26 +89,45 @@
         "tags": ["enterprise search", "apache lucene", "solr", "open source", "text analytics"],
         "members": ["Clint", "James"],
         "location_group": "London, England, UK"
-    }   
+    }
     ```
-1. propose appropriate index name and mapping
-    * at least two shards and two replicas
-    * at least three different field types
-    * at least one dedicated field analyzer
-1. create index, analyzer and mapping
-    * attach analyzer to at least one field
-1. index documents mentioned above
 1. verify
     * that index has an analyzer
+        ```
+        GET programming-user-groups/_settings      
+        ```
     * analyze exemplary query using analyzer
+        ```
+        POST programming-user-groups/_analyze
+        {
+          "analyzer": "english_standard",
+          "text": "The 2 QUICK Brown-Foxes jumped over the lazy dog's bone."
+        }
+        ```
     * analyze exemplary query using default analyzer
+        ```
+        POST programming-user-groups/_analyze
+        {
+          "text": "The 2 QUICK Brown-Foxes jumped over the lazy dog's bone."
+        }
+        ```
     * verify that all documents were indexed
-    * verify terms for some selected document
-1. search
-    * find by id
         ```
         GET /programming-user-groups/_doc/1
         ```
+    * verify terms for some selected document
+        ```
+        GET /programming-user-groups/_termvectors/1
+        {
+          "fields" : ["description"],
+          "offsets" : true,
+          "payloads" : true,
+          "positions" : true,
+          "term_statistics" : true,
+          "field_statistics" : true
+        }
+        ```
+1. search
     * description contains clojure or group (ignore case); better score if contains all
         ```
         GET programming-user-groups/_search
