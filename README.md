@@ -96,6 +96,19 @@
     ```
   
 ## search
+### mechanics
+* every node in the cluster can handle HTTP and Transport traffic by default
+* all nodes know about all the other nodes in the cluster and can forward client requests 
+to the appropriate node
+* search requests may involve data held on different data nodes
+* a search request is executed in two phases which are coordinated by the node which receives the 
+client request  —  the coordinating node
+    * scatter phase
+        * coordinating node forwards the request to the data nodes which hold the data
+        * each data node executes the request locally and returns its results to the coordinating node
+    * gather phase, the coordinating node reduces each data node’s results into a single global resultset
+
+### API
 * template for search requests
     ```
     GET index-name/_search // you can search entire cluster: GET /_search {...}
@@ -184,6 +197,8 @@
         * must appear in matching documents
         * score of the query will be ignored
         * considered for caching
+        * Elasticsearch constructs a bitset, which is a binary set of bits denoting whether 
+        the document matches this filter
     * should
         * should appear in the matching document
         * contributes to the score
@@ -228,43 +243,8 @@
     * indicates whether the number of returned documents in the value parameter is accurate or a lower bound
         * eq: Accurate
         * gte: Lower bound, including returned documents
+
 ## aggregate
 * bucketing
 * metrics
 * pipeline
-
-* search
-    * SORT ORDER FOR RESULTS
-        * default: _score
-    * Understanding the structure of a response
-    * filter query
-        * Rather than comput-
-          ing the score for a particular term as queries do, a filter on a search returns a simple
-          binary “does this document match this query” yes-or-no answer
-        * Filters require less processing and are cacheable because they don’t calculate the score.
-        * Behind the scenes, Elasticsearch constructs a bitset, which is a binary set of bits
-          denoting whether the document matches this filter.
-        * Use query clauses in query context for conditions which should affect the score of matching 
-        documents (i.e. how well does the document match), and use all other query clauses in filter context
-    * TERM QUERY AND TERM FILTER
-        * the term being searched for isn’t analyzed, it must match a term in the docu-
-          ment exactly for the result to be found
-        * a term filter can be used when you want to limit the results to
-          documents that contain the term but without affecting the score. 
-        * "terms": { - the terms query (note the s !) can search for multiple terms
-          in a document’s field
-    * Match query
-        * "match": {
-        * the two most important behaviors are boolean and phrase
-            * boolean
-                * By default, the match query uses Boolean behavior and the OR operator.
-                * "operator": "and"
-            * phrase
-    * https://www.elastic.co/guide/en/elasticsearch/reference/6.8/query-dsl-filtered-query.html
-        * The filtered query is replaced by the bool query.
-    * https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-range-query.html
-    * keyword datatype
-        * A field to index structured content such as IDs, email addresses, hostnames, status codes, zip codes or tags.
-        * typically used for filtering (Find me all blog posts where status is published)
-        * are only searchable by their exact value
-        * https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-types.html
