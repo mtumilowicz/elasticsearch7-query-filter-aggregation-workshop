@@ -56,31 +56,49 @@
     ```
 1. propose appropriate index name and mapping
     * at least two shards and one replica (per primary shard)
+        * https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html
     * at least three different field types
+        * https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-types.html
     * at least one dedicated field analyzer
+        * https://www.elastic.co/guide/en/elasticsearch/reference/current/specify-analyzer.html
+        * https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-standard-analyzer.html
 1. create index, analyzer and mapping
     * attach analyzer to at least one field
-1. index documents mentioned above
+1. save (index) documents mentioned above
 1. verify
     * that index has an analyzer
     * analyze exemplary query using analyzer
     * analyze exemplary query using default analyzer
     * verify that all documents were indexed
     * verify terms for some field of selected document
+        * hint: `_termvectors`
 1. search
-    * description contains clojure or group (ignore case); better score if contains all
-    * contains clojure and group, the more the higher the score
+    * https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html
+    * field `description` contains clojure or group (ignore case); better score if contains all
+        * hint: `query.match`
+    * document contains clojure and group, the more the higher the score
+        * hint: `query.query_string`
     * description contains group clojure in that order in proximity - suppose at most 1 words between
         * compare with different slop and order
+        * hint: `query.match_phrase`
     * find all created after 2011, first chunk: 10
         * manipulate from and size
+        * hint: `query.range`
     * find all organized by Lee (not lee)
         * compare with lee - draw conclusions
+        * hint: `query.term`
     * name has to contain elasticsearch and organizer cannot be Lee
         * compare with filter
+        * hint: `query.bool.must`
     * event must contain group and organizer should be Lee
+        * hint: `query.bool.should`
     * filter events that has tag clojure or lucene
+        * hint: `query.bool.filter`
 1. aggregations
+    * https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html
     * group by tags and display count in each group
+        * hint: `terms`
     * group by tags and display date of the latest event in each group
+        * hint: pipeline aggregation
     * group by tags and display id and date of the latest event in each group
+        * hint: `top_hits`
