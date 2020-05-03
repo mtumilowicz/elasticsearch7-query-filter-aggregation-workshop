@@ -1,9 +1,11 @@
 # java12-elasticsearch-inverted-index-workshop
 
-* https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
-* https://www.elastic.co/blog/moving-from-types-to-typeless-apis-in-elasticsearch-7-0
-* https://stackoverflow.com/questions/26001002/elasticsearch-difference-between-term-match-phrase-and-query-string
-* https://stackoverflow.com/questions/43530610/how-to-do-a-mapping-of-array-of-strings-in-elasticsearch
+* references
+   * https://www.manning.com/books/elasticsearch-in-action
+   * https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
+   * https://www.elastic.co/blog/moving-from-types-to-typeless-apis-in-elasticsearch-7-0
+   * https://stackoverflow.com/questions/26001002/elasticsearch-difference-between-term-match-phrase-and-query-string
+   * https://stackoverflow.com/questions/43530610/how-to-do-a-mapping-of-array-of-strings-in-elasticsearch
 
 ## preface
 * goals of this workshop
