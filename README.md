@@ -245,6 +245,32 @@ client request  —  the coordinating node
         * gte: Lower bound, including returned documents
 
 ## aggregate
-* bucketing
-* metrics
-* pipeline
+* aggregated data based on a search query
+* can be seen as a unit-of-work that builds analytic information over a set of documents
+* template
+    ```
+    GET /programming-user-groups/_search
+    {
+        "aggs": {
+            "agg-name" : {
+                "agg-type": { ... },
+                "aggs":{ // sub aggregations
+                    "sub-agg-name": {
+                        "sub-agg-type": { ... }
+                    }
+                }
+            }
+        }
+    }
+    ```
+* types
+    * bucketing
+        * each bucket is associated with a key and a document criterion
+        * when a criterion matches, the document is considered to "fall in" the relevant bucket
+        * aggregations can be nested
+            * bucketing aggregations can have sub-aggregations (bucketing or metric)
+        * types: https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html
+    * metrics
+        * refer to the statistical analysis
+        * example: minimum value, maximum value, standard deviation, and much more
+        * types: https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics.html
