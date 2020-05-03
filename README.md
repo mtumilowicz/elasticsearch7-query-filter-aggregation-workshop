@@ -1,4 +1,4 @@
-# java12-elasticsearch-inverted-index-workshop
+# elasticsearch7-query-filter-aggregation-workshop
 
 * references
    * https://www.manning.com/books/elasticsearch-in-action
