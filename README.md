@@ -156,11 +156,78 @@
     }
     ```
 * query bool
+    * boolean combinations of other queries
+    ```
+    "bool" : {
+        "must" : {
+            ...
+        },
+        "filter": {
+            ...
+        },
+        "must_not" : {
+            ...
+        },
+        "should" : [
+            ...
+        ],
+    }
+    ```
     * must
+        * must appear in matching documents
+        * contributes to the score
     * must_not
+        * must not appear in the matching documents
+        * scoring is ignored
+        * considered for caching
     * filter
+        * must appear in matching documents
+        * score of the query will be ignored
+        * considered for caching
     * should
+        * should appear in the matching document
+        * contributes to the score
+### response body
+```
+{
+    "took" : 1, // in milliseconds
+    "timed_out" : false,
+    "_shards" : { // count of shards used for the request
+        "total" : 1, // total number of shards that require querying
+        "successful" : 1, // number of shards that executed the request successfully
+        "skipped" : 0,
+        "failed" : 0 // number of shards that failed to execute the request
+    },
+    "hits" : { // documents and metadata
+        "total" : { // metadata about the number of returned documents
+            "value" : 2, // total number of returned documents
+            "relation" : "eq"
+        },
+        "max_score" : 0.9395274, // highest returned document _score
+        "hits" : [ // array of returned document objects
+            {
+                "_index" : "programming-user-groups",
+                "_id" : "2",
+                "_score" : 0.9395274,
+                "_source" : { ... } // original JSON body
+            } 
+        ]
+    }
+}
 
+```
+* took
+    * measuring the time elapsed between receipt of a request on the coordinating node and the time at 
+    which the coordinating node is ready to send the response
+* _shard.skipped
+    * skipped the request because a lightweight check helped realize that no documents could possibly 
+    match on this shard
+    * typically happens when a search request includes a range filter and the shard only has values that 
+    fall outside of that range
+* hits.relation
+    * indicates whether the number of returned documents in the value parameter is accurate or a lower bound
+        * eq: Accurate
+        * gte: Lower bound, including returned documents
 ## aggregate
 * bucketing
 * metrics
