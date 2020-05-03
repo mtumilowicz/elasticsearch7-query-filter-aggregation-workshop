@@ -96,9 +96,9 @@
         * hint: `query.bool.filter`
 1. aggregations
     * https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html
-    * group by tags and display count in each group
+    * group by tags and display count in each bucket
         * hint: `terms`
-    * group by tags and display date of the latest event in each group
+    * group by tags and display date of the newest group in each bucket
         * hint: pipeline aggregation
-    * group by tags and display id and date of the latest event in each group
+    * group by tags and display id and date of the newest group in each bucket
         * hint: `top_hits`

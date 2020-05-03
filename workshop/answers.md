@@ -245,7 +245,7 @@
         }
         ```
 1. aggregations
-    * group by tags and display count in each group
+    * group by tags and display count in each bucket
         ```
         POST /programming-user-groups/_search
         {
@@ -256,7 +256,7 @@
             }   
         }
         ```
-    * group by tags and display date of the latest event in each group
+    * group by tags and display date of the newest group in each bucket
         ```
         POST /programming-user-groups/_search
         {
@@ -272,7 +272,7 @@
             }
         }
         ```
-    * group by tags and display id and date of the latest event in each group
+    * group by tags and display id and date of the newest group in each bucket
         ```
         POST /programming-user-groups/_search
         {
