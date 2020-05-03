@@ -2,6 +2,7 @@
 
 * https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
 * https://www.elastic.co/blog/moving-from-types-to-typeless-apis-in-elasticsearch-7-0
+* https://stackoverflow.com/questions/26001002/elasticsearch-difference-between-term-match-phrase-and-query-string
 * https://stackoverflow.com/questions/43530610/how-to-do-a-mapping-of-array-of-strings-in-elasticsearch
 
 ## preface
@@ -10,8 +11,13 @@
     * introduction to the basics of API
         * creating index, customize analyzers
         * define mappings
+        * indexing documents
         * searching: query, filter
+            * analyzing output
         * aggregating
+* in `docker-compose` there is elasticsearch + kibana (7.6) prepared for local testing
+    * cd `docker/compose`
+    * `docker-compose up -d`
 * workshop and answers are in `workshop` directory
 
 ## index
@@ -63,13 +69,92 @@
         * queries are internally converted on this long representation, and the result is converted 
         back to a string according to the field's date format
     * many more: range, object, nested, geo-points...
-
+* indexing documents
+    * each document indexed is versioned
+    ```
+    POST /index-name/_create/id
+    {
+        ... // fields
+    }
+    ```
+* deleting documents
+    * optimistic locking - version can be specified
+    ```
+    DELETE /index-name/_doc/id
+    ```
+* updating documents
+    * optimistic locking - version can be specified
+    * partial update
+    * by default updates detect if they don’t change anything and return `"result": "noop"`
+    ```
+    POST /index-name/_update/id
+    {
+        "doc" : {
+            "name" : "new_name"
+        }
+    }
+    ```
+  
 ## search
+* template for search requests
+    ```
+    GET index-name/_search // you can search entire cluster: GET /_search {...}
+    {
+        "query": {
+            ...
+        }
+    }
+    ```
 * query match
+    * text is analyzed before matching
+    * standard query for performing a full-text search
+    * per field
+    ```
+    "match" : {
+        "field-name" : {
+            "query" : "..."
+        }
+    }
+    ```
 * query query_string
+    * text is analyzed before matching
+    * if no field default - search all document
+    * create a complex search that includes wildcard characters, searches across multiple fields
+    ```
+    "query_string" : {
+        "query" : "..."
+    }
+    ```
 * query match_phrase
+    * text is analyzed before matching
+    * all the terms must appear in the field
+    * terms must have the same order
+        * configured `slop` - deviation of x term
+    ```
+    "match_phrase" : {
+        "field-name" : {
+            "query": "...",
+            "slop": 1
+        }
+    }
+    ```
 * query range
+    ```
+    "range" : {
+        "field-name" : {
+            "gte" : 10,
+            "lte" : 20,
+        }
+    }
+    ```
 * query term
+    * text is NOT analyzed before matching
+    * exact matching
+    ```
+    "term": {
+        "field-name": "..."
+    }
+    ```
 * query bool
     * must
     * must_not
@@ -82,19 +167,9 @@
 * pipeline
 
 * search
-    * Elasticsearch looks in the _all field by default
-    * by default, Elasticsearch returns documents matching any of the specified words
-      (the default operator is OR )
-    * all REST search requests use the _search REST endpoint and can be either a GET
-      request or a POST request. You can search an entire cluster or you can limit the scope
-      by specifying the names of indices or types in the request URL .
-    * Basic components of a search request
-        wymienic
     * SORT ORDER FOR RESULTS
         * default: _score
     * Understanding the structure of a response
-    * Match query   
-        * score
     * filter query
         * Rather than comput-
           ing the score for a particular term as queries do, a filter on a search returns a simple

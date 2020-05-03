@@ -160,8 +160,8 @@
             "query": {
                 "match_phrase" : {
                     "description" : {
-                      "query": "group clojure",
-                      "slop": 1
+                        "query": "group clojure",
+                        "slop": 1
                     }
                 }
             }
