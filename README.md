@@ -1,8 +1,86 @@
+# java12-elasticsearch-inverted-index-workshop
+
+* https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html
 * https://www.elastic.co/blog/moving-from-types-to-typeless-apis-in-elasticsearch-7-0
 * https://stackoverflow.com/questions/43530610/how-to-do-a-mapping-of-array-of-strings-in-elasticsearch
-* https://www.elastic.co/guide/en/elasticsearch/reference/current/query-filter-context.html
-* 7.0 deprecated APIs that accept types, introduced new typeless APIs, and removed support for the _default_ mapping
-  
+
+## preface
+* goals of this workshop
+    * https://github.com/mtumilowicz/java12-elasticsearch-inverted-index-workshop
+    * introduction to the basics of API
+        * creating index, customize analyzers
+        * define mappings
+        * searching: query, filter
+        * aggregating
+* workshop and answers are in `workshop` directory
+
+## index
+* note that 7.0 deprecated APIs that accept types, introduced new typeless APIs
+* create index
+    ```
+    PUT /index-name
+    {
+        "settings": {
+            "index" : {
+                ... // configure index
+            },
+            "analysis": {
+                ... // customize analyzer
+            }
+        },
+        "mappings": {
+            "properties": {
+                ... // fields
+            }
+        }
+    }
+    ```
+* field datatypes
+    * any field can contain zero or more values by default, however, all values in the array 
+    must be of the same datatype
+    * string
+        * text
+            * full-text indexed (analyzed)
+            * are not used for sorting and seldom used for aggregations
+            * example: body of an email or the description of a product
+            * sometimes it is useful to have multiple version of the same field: one for full 
+            text search and the other for aggregations and sorting
+        * keyword
+            * are only searchable by their exact value (not analyzed)
+            * typically used for filtering, sorting, and aggregations
+            * example: IDs, email addresses, hostnames, status codes, zip codes or tags
+    * numeric
+        * byte, short, integer, long ...
+    * date
+        ```
+        "date": {
+            "type":   "date",
+            "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
+        }
+        ```
+        * internally, dates are converted to UTC (if the time-zone is specified) and stored as 
+        a long number representing milliseconds-since-the-epoch
+        * queries are internally converted on this long representation, and the result is converted 
+        back to a string according to the field's date format
+    * many more: range, object, nested, geo-points...
+
+## search
+* query match
+* query query_string
+* query match_phrase
+* query range
+* query term
+* query bool
+    * must
+    * must_not
+    * filter
+    * should
+
+## aggregate
+* bucketing
+* metrics
+* pipeline
+
 * search
     * Elasticsearch looks in the _all field by default
     * by default, Elasticsearch returns documents matching any of the specified words
