@@ -199,6 +199,8 @@ client request  —  the coordinating node
         * considered for caching
     * filter
         * must appear in matching documents
+        * bypass analysis
+            * filtering 'Andy' when indexed is 'andy' will give no hit
         * score of the query will be ignored
         * considered for caching
         * Elasticsearch constructs a bitset, which is a binary set of bits denoting whether 

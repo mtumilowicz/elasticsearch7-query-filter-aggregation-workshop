@@ -93,6 +93,7 @@
     * event must contain group and organizer should be Lee
         * hint: `query.bool.should`
     * filter events that has tag clojure or lucene
+        * try to filter on the organizer, for example 'Andy'
         * hint: `query.bool.filter`
 1. aggregations
     * https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html
