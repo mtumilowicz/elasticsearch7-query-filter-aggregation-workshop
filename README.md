@@ -8,6 +8,7 @@
    * https://www.elastic.co/blog/moving-from-types-to-typeless-apis-in-elasticsearch-7-0
    * https://stackoverflow.com/questions/26001002/elasticsearch-difference-between-term-match-phrase-and-query-string
    * https://stackoverflow.com/questions/43530610/how-to-do-a-mapping-of-array-of-strings-in-elasticsearch
+   * https://marcobonzanini.com/2015/02/09/phrase-match-and-proximity-search-in-elasticsearch/
 
 ## preface
 * goals of this workshop
@@ -146,7 +147,8 @@ client request  —  the coordinating node
     * text is analyzed before matching
     * all the terms must appear in the field
     * terms must have the same order
-        * configured `slop` - deviation of x term
+        * configured `slop` - how far we allow the terms to be
+            * `this is a brown dog` and `the dog is brown` are OK with `slope = 1`
     ```
     "match_phrase" : {
         "field-name" : {
