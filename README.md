@@ -102,6 +102,7 @@
     * optimistic locking - version can be specified
         * example: `DELETE /products/_doc/123?version=3`
 * updating documents
+    * every update is actually a delete + reindex operation.   
     * example
         ```
         POST /index-name/_update/id
